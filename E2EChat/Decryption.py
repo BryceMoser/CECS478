@@ -4,10 +4,17 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 
-#Obtaining information about JSON from command line
-if '--d' in sys.argv and 'RSAcipher:' in sys.argv:
-    RSAciphertxt = sys.argv[sys.argv.index('RSAcipher:')+1]
-    AESciphertxt = sys.argv[sys.argv.index('AEScipher:')+1]
+#Parsing information about JSON from command line:
+if '--d' in sys.argv:
+    with open(sys.argv[sys.argv.index('--d')+1]) as enc:
+        json_data = json.loads(enc)
+        #Assuming the title of json is "Message"
+        for p in json_data['Message']:
+            print('RSA Ciphertext'+p['rsa_ciphertxt'])
+            print('AES Ciphertext'+p['aes_ciphertxt'])
+            print('HMAC tag'+p['htag'])
+            print('Key path'+p['path'])
+        
 
 
 #Retrieving private key
@@ -17,3 +24,9 @@ if '--d' in sys.argv and 'RSAcipher:' in sys.argv:
 #         password=None,
 #         backend = default_backend()
 #     )
+
+# python enc.py --d sdfsdf.jsn
+# {
+#     RSAKey: "Asdasdasdas",
+#     ciphertext: "asdouh319r8gefbweof",
+# }
