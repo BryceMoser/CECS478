@@ -25,7 +25,6 @@ def Myencrypt(plaintext, key):
 
 
 def MyfileEncrypt(msgPath):
-
     key = os.urandom(keySize)
     file_name, file_extension = os.path.splitext(msgPath)
 
@@ -43,7 +42,7 @@ def encrpytRSAMessage(msgPath, RSA_PublicKey_filepath):
     ciphertext, tag, iv, key, file_extension = MyfileEncrypt(msgPath)
 
     with open(RSA_PublicKey_filepath, 'rb') as key_file:
-        public_key = serialization.load_ssh_public_key(
+        public_key = serialization.load_pem_public_key(
         key_file.read(),
 #       password,
         backend=default_backend()
@@ -81,4 +80,4 @@ def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
 if '--e' in sys.argv and '--rsakeypath' in sys.argv:
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
     msgPath = sys.argv[sys.argv.index('--e') + 1]
-    BeginRSAEncryption(RSAPubKeyPath, msgPath)
+    BeginRSAEncryption(msgPath, RSAPubKeyPath)
