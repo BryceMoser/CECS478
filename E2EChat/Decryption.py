@@ -27,12 +27,14 @@ def RSACipher_Decrypt (jfile):
     decodedAES = base64.b64decode(keysDecrypted)
     aesKey = decodedAES[:32]
 
-    #Load in Private Key
-    with open ("E2EChat\RSA2048 KeyPair\rsaPrivKey.pem", "rb") as prvkeyfile:
-        prvKey = serialization.load_pem_private_key(
-            prvkeyfile.read(),
-            password=None,
-            backend=default_backend
+    #Determining AES from RSACipher
+>>> with open("private key" "rb as privKey"
+        AESKey = privkey.decrypt(
+         rsaCipher,
+         padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+             algorithm=hashes.SHA256(),
+             label=None
         )
     #Decrypting message using private key
     rsadecrypt = Cipher(
@@ -48,13 +50,7 @@ def RSACipher_Decrypt (jfile):
         key_file.read(),
         backend=default_backend()
     )
-    encryptor = Cipher(
-        algorithms.AES(public_key),
-        modes.GCM(IV),
-        backend=default_backend()
-    ).encryptor()
-    cipherText = encryptor.update(decryptPT) + encryptor.finalize()
-
+ plaintext == message
 
     #Should flag if not a match from the JSON
     if cipherText != cipherTxt:
