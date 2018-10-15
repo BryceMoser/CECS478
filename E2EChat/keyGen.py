@@ -8,9 +8,15 @@ key = rsa.generate_private_key(
     backend=default_backend()
 )
 
-with open("D:\\key.pem", "wb") as f:
+with open("D:\\College Classes\\Fall 2018\CECS478\\RSA2048 KeyPair\\rsaPrivKey.pem", "wb") as f:
     f.write(key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption()
+    ))
+pubKey = key.public_key()
+with open("D:\\College Classes\\Fall 2018\CECS478\\RSA2048 KeyPair\\rsaPubKey.pem", "wb") as f:
+    f.write(pubKey.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
     ))
