@@ -56,7 +56,7 @@ def RSACipher_Decrypt (jfile):
     cipherText = encryptor.update(decryptPT) + encryptor.finalize()
 
 
-    #Should flag is 
+    #Should flag if not a match from the JSON
     if cipherText != cipherTxt:
         return print('Unsuccessful')
         
