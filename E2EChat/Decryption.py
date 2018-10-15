@@ -1,26 +1,31 @@
 import sys
 import json
+import os 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
-#Generates an RSA object with the loaded .pem private key
-with open('RSA2048 KeyPair\privkey.ppk') as key_file:
-    prvK = serialization.load_pem_private_key(
-        key_file.read(),
-        password=None,
-        backend=default_backend
-    )
+#Gathering encryption data from JSON
+def unpackJSON (jsonFile):
+    for d in jsonFile:
+        cipherTxt = d['ciphertext_base64']
+        tag = d['tag']
+        IV = d['iv']
+        rsaCipher = d['RSACipher']
+    return (cipherTxt, tag, IV, rsaCipher)
 
-#Parsing information about JSON from command line:
-if '--d' in sys.argv:
+
+if '--d' in sys.argv and '--rsakeypath' in sys.argv:
     with open(sys.argv[sys.argv.index('--d')+1]) as enc:
-        json_data = json.loads(enc)
-        for p in json_data['Message']:
-            rsaCipher = p['rsa_ciphertext']
+        json_file = json.loads(enc)
+cipherTxt, tag, IV, rsaCipher = unpackJSON(json_file)
 
-
-    # print('RSA Ciphertext'+p['rsa_ciphertxt'])
-    # print('AES Ciphertext'+p['aes_ciphertxt'])
-    # print('HMAC tag'+p['htag'])
-    # print('Key path'+p['path'])
+pubKey = sys.argv[sys.argv.index('--rsakeypath') + 1]
+decryptor = Cipher(
+algorithms.AES(pubKey),
+modes.GCM(IV, tag),
+backend=default_backend
+).decryptor()
