@@ -58,4 +58,5 @@ if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
         json_file = json.load(enc)
     RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
     RSACipher_Decrypt(json_file, RSAPrvKeyPath)
+    os.remove(sys.argv[sys.argv.index('--d')+1])
 
