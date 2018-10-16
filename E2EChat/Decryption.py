@@ -27,11 +27,8 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
     with open(RSAPrvKeyPath, 'rb') as privKeyFile:
         privKey = serialization.load_pem_private_key(privKeyFile.read(), password=None, backend=default_backend())
     privKeyFile.close()
-    print(privKey)
+
     #Determining AES from RSACipher
-    #Make sure your key is loaded correctly
-    #Make sure this runs without errors
- 
     AESKey = privKey.decrypt(
         rsaCipher,
         padding.OAEP(
@@ -40,16 +37,19 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
             label=None
         )
       )
-    print(AESKey)
 
-#     #Decrypting message using private key
-#     rsadecrypt = Cipher(
-#     algorithms.AES(prvKey),
-#     modes.GCM(IV, tag),
-#     backend=default_backend
-#     ).decryptor()
-#     decryptPT = rsadecrypt.update(cipherTxt)+rsadecrypt.finalize()
-#     #If decryption works print out message
+    #Decrypting message using private key
+    plaintext = privKey.decrypt(
+        cipherTxt,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    #If decryption works print out message
+    print(plaintext)
+
 
 
 if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
