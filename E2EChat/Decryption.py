@@ -13,7 +13,15 @@ from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 #Gathering encryption data from JSON
  # AES(MSG) -> Key, IV Ciphertext, tag -> RSA.E(Key, publicKey) -> RSA.D(Key, privateKey)
 
-
+def Mydecrypt(ciphertext, tag, iv, key):
+  #Decrypts the ciphertext using the tag, iv and key
+  decryptor = Cipher(
+      algorithms.AES(key),
+      modes.GCM(iv, tag),
+      backend=default_backend()
+  ).decryptor()
+  #Returns the decrypted value
+  return decryptor.update(ciphertext) + decryptor.finalize()
 
 def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
     
@@ -37,6 +45,7 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
             label=None
         )
       )
+<<<<<<< HEAD
 
     #Decrypting message using private key
     plaintext = privKey.decrypt(
@@ -50,6 +59,14 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
     #If decryption works print out message
     print(plaintext)
 
+=======
+    
+    plaintext = Mydecrypt(cipherTxt, tag, IV, AESKey)
+    output_filename = 'finalFile' + '.txt'
+    f = open(output_filename, 'wb')
+    f.write(plaintext)
+    f.close()
+>>>>>>> f1f9fde0a3b8ac85e61d8e43635cdae61ae4b7a4
 
 
 if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
@@ -57,4 +74,5 @@ if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
         json_file = json.load(enc)
     RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
     RSACipher_Decrypt(json_file, RSAPrvKeyPath)
+    os.remove(sys.argv[sys.argv.index('--d')+1])
 
