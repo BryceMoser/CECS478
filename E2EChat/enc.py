@@ -49,15 +49,16 @@ def encrpytRSAMessage(msgPath, RSA_PublicKey_filepath):
     )
 
         key_file.close()
-        RSACipher = public_key.encrypt(
-            key,
-            padding.OAEP(
-                mgf=padding.MGF1(algorithm=hashes.SHA1()),
-                algorithm=hashes.SHA1(),
-                label=None
-            )
+    
+    RSACipher = public_key.encrypt(
+        key,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA1()),
+            algorithm=hashes.SHA1(),
+            label=None
         )
-        return (RSACipher, ciphertext, tag, iv, file_extension)
+    )
+    return (RSACipher, ciphertext, tag, iv, file_extension)
      
 def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
     file_name = os.path.splitext(filepath)[0]
@@ -74,6 +75,7 @@ def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
     outfile = open(output_filename, 'w')
     outfile.write(json.dumps(data))
     outfile.close()
+    print(RSACipher)
     return (output_filename)
 
 

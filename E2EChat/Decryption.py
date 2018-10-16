@@ -18,31 +18,29 @@ from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
     
     #Unpacking JSON
-    cipherTxt = jsonFile['ciphertext_base64']
-    tag = jsonFile['tag']
-    IV = jsonFile['iv']
-    rsaCipher = jsonFile['RSACipher']
-    
-    #Serializing Private Key
-    with open(RSAPrvKeyPath, 'rb') as privKeyPath:
-        privateKey = serialization.load_pem_private_key(
-            privKeyPath.read(),
-            password=None,
-            backend=default_backend
-        )
+    cipherTxt = base64.b64decode(jsonFile['ciphertext_base64'])
+    tag = base64.b64decode(jsonFile['tag'])
+    IV = base64.b64decode(jsonFile['iv'])
+    rsaCipher = base64.b64decode(jsonFile['RSACipher'])
 
+    #Serializing Private Key
+    with open(RSAPrvKeyPath, 'rb') as privKeyFile:
+        privKey = serialization.load_pem_private_key(privKeyFile.read(), password=None, backend=default_backend())
+    privKeyFile.close()
+    print(privKey)
     #Determining AES from RSACipher
     #Make sure your key is loaded correctly
+    #Make sure this runs without errors
  
-        #Make sure this runs without errors
-        # AESKey = privateKey.decrypt(
-        # rsaCipher,
-        # padding.OAEP(
-        #     mgf=padding.MGF1(algorithm=hashes.SHA256()),
-        #     algorithm=hashes.SHA256(),
-        #     label=None
-        # ))
-        # print(AESKey)
+    AESKey = privKey.decrypt(
+        rsaCipher,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA1()),
+            algorithm=hashes.SHA1(),
+            label=None
+        )
+      )
+    print(AESKey)
 
 #     #Decrypting message using private key
 #     rsadecrypt = Cipher(
@@ -54,10 +52,9 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
 #     #If decryption works print out message
 
 
-if '--d' in sys.argv and '--rsaprvkey' in sys.argv:
+if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
     with open(sys.argv[sys.argv.index('--d')+1]) as enc:
         json_file = json.load(enc)
-    RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprvkey') + 1]
-
+    RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
     RSACipher_Decrypt(json_file, RSAPrvKeyPath)
 
