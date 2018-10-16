@@ -35,11 +35,8 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
     with open(RSAPrvKeyPath, 'rb') as privKeyFile:
         privKey = serialization.load_pem_private_key(privKeyFile.read(), password=None, backend=default_backend())
     privKeyFile.close()
-    print(privKey)
+
     #Determining AES from RSACipher
-    #Make sure your key is loaded correctly
-    #Make sure this runs without errors
- 
     AESKey = privKey.decrypt(
         rsaCipher,
         padding.OAEP(
