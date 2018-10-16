@@ -35,9 +35,9 @@ def MyfileEncrypt(msgPath):
             key
         )
         return (ciphertext, tag, iv, key, file_extension)
-
-
-def encrpytRSAMessage(msgPath, RSA_PublicKey_filepath):
+ 
+def RSAEnc(filepath, RSA_PublicKey_filepath):
+    file_name = os.path.splitext(filepath)[0]
 
     ciphertext, tag, iv, key, file_extension = MyfileEncrypt(msgPath)
 
@@ -58,11 +58,8 @@ def encrpytRSAMessage(msgPath, RSA_PublicKey_filepath):
             label=None
         )
     )
-    return (RSACipher, ciphertext, tag, iv, file_extension)
-     
-def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
-    file_name = os.path.splitext(filepath)[0]
-    RSACipher, ciphertext, tag, iv, file_extension = encrpytRSAMessage(filepath, RSA_PublicKey_filepath)
+
+
     data = {}
     data['ciphertext_base64'] = base64.b64encode(ciphertext).decode('utf-8')
     data['tag'] = base64.b64encode(tag).decode('utf-8')
@@ -81,4 +78,4 @@ def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
 if '--e' in sys.argv and '--rsakeypath' in sys.argv:
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
     msgPath = sys.argv[sys.argv.index('--e') + 1]
-    BeginRSAEncryption(msgPath, RSAPubKeyPath)
+    RSAEnc(msgPath, RSAPubKeyPath)
