@@ -45,28 +45,12 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
             label=None
         )
       )
-<<<<<<< HEAD
-
-    #Decrypting message using private key
-    plaintext = privKey.decrypt(
-        cipherTxt,
-        padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA1()),
-            algorithm=hashes.SHA1(),
-            label=None
-        )
-    )
-    #If decryption works print out message
-    print(plaintext)
-
-=======
     
     plaintext = Mydecrypt(cipherTxt, tag, IV, AESKey)
     output_filename = 'finalFile' + '.txt'
     f = open(output_filename, 'wb')
     f.write(plaintext)
     f.close()
->>>>>>> f1f9fde0a3b8ac85e61d8e43635cdae61ae4b7a4
 
 
 if '--d' in sys.argv and '--rsaprivkey' in sys.argv:

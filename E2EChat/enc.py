@@ -75,7 +75,6 @@ def BeginRSAEncryption(filepath, RSA_PublicKey_filepath):
     outfile = open(output_filename, 'w')
     outfile.write(json.dumps(data))
     outfile.close()
-    print(RSACipher)
     return (output_filename)
 
 
