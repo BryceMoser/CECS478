@@ -1,6 +1,6 @@
+import Decryption
 import os
 import sys
-import json
 import base64
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -13,33 +13,21 @@ from cryptography.hazmat.primitives.ciphers import (
 keySize = 32
 IVSize = 16
 
-def Myencrypt(plaintext, key):
+def Myencrypt(plaintext):
     iv = os.urandom(IVSize)
+    key = os.urandom(keySize)
     encryptor = Cipher(
         algorithms.AES(key),
         modes.GCM(iv),
         backend=default_backend()
     ).encryptor()
     ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-    return (iv, ciphertext, encryptor.tag)
+    return (iv, ciphertext, encryptor.tag, key)
 
-
-def MyfileEncrypt(msgPath):
-    key = os.urandom(keySize)
-    file_name, file_extension = os.path.splitext(msgPath)
-
-    with open(msgPath, "rb") as binary_file:
-        data = binary_file.read()
-        iv, ciphertext, tag = Myencrypt(
-            data,
-            key
-        )
-        return (ciphertext, tag, iv, key, file_extension)
  
-def RSAEnc(filepath, RSA_PublicKey_filepath):
-    file_name = os.path.splitext(filepath)[0]
+def RSAEnc(plaintext, RSA_PublicKey_filepath):
 
-    ciphertext, tag, iv, key, file_extension = MyfileEncrypt(msgPath)
+    ciphertext, tag, iv, key = Myencrypt(msg)
 
     with open(RSA_PublicKey_filepath, 'rb') as key_file:
         public_key = serialization.load_pem_public_key(
@@ -59,23 +47,19 @@ def RSAEnc(filepath, RSA_PublicKey_filepath):
         )
     )
 
+    ciphertext_base64 = base64.b64encode(ciphertext).decode('utf-8')
+    tag = base64.b64encode(tag).decode('utf-8')
+    iv = base64.b64encode(iv).decode('utf-8')
+    RSACipher = base64.b64encode(RSACipher).decode('utf-8')
+ 
 
-    data = {}
-    data['ciphertext_base64'] = base64.b64encode(ciphertext).decode('utf-8')
-    data['tag'] = base64.b64encode(tag).decode('utf-8')
-    data['iv'] = base64.b64encode(iv).decode('utf-8')
-    data['RSACipher'] = base64.b64encode(RSACipher).decode('utf-8')
-    data['file_extension'] = file_extension
-
-    output_filename = file_name + '.rsa'
-
-    outfile = open(output_filename, 'w')
-    outfile.write(json.dumps(data))
-    outfile.close()
-    return (output_filename)
+    return (ciphertext_base64, tag, iv, RSACipher)
 
 
-if '--e' in sys.argv and '--rsakeypath' in sys.argv:
+if '--e' in sys.argv and '--rsakeypath' in sys.argv and 'prvkeypath':
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
-    msgPath = sys.argv[sys.argv.index('--e') + 1]
-    RSAEnc(msgPath, RSAPubKeyPath)
+    RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
+    msg = sys.argv[sys.argv.index('--e') + 1]
+    ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
+    Decryption.RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
+    

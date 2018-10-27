@@ -1,5 +1,5 @@
+import enc
 import sys
-import json
 import os 
 import base64
 from cryptography.hazmat.primitives import serialization
@@ -23,13 +23,7 @@ def Mydecrypt(ciphertext, tag, iv, key):
   #Returns the decrypted value
   return decryptor.update(ciphertext) + decryptor.finalize()
 
-def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
-    
-    #Unpacking JSON
-    cipherTxt = base64.b64decode(jsonFile['ciphertext_base64'])
-    tag = base64.b64decode(jsonFile['tag'])
-    IV = base64.b64decode(jsonFile['iv'])
-    rsaCipher = base64.b64decode(jsonFile['RSACipher'])
+def RSACipher_Decrypt (cipherTxt, tag, IV, rsaCipher, RSAPrvKeyPath):
 
     #Serializing Private Key
     with open(RSAPrvKeyPath, 'rb') as privKeyFile:
@@ -47,16 +41,10 @@ def RSACipher_Decrypt (jsonFile, RSAPrvKeyPath):
       )
     
     plaintext = Mydecrypt(cipherTxt, tag, IV, AESKey)
-    output_filename = 'finalFile' + '.txt'
-    f = open(output_filename, 'wb')
-    f.write(plaintext)
-    f.close()
+    print(plaintext)
 
 
-if '--d' in sys.argv and '--rsaprivkey' in sys.argv:
-    with open(sys.argv[sys.argv.index('--d')+1]) as enc:
-        json_file = json.load(enc)
-    RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
-    RSACipher_Decrypt(json_file, RSAPrvKeyPath)
-    os.remove(sys.argv[sys.argv.index('--d')+1])
+
+RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
+
 
