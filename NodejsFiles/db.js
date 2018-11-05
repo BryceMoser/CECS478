@@ -1,7 +1,6 @@
 //var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var url = "mongodb://C:Supersecure478@e2eproj-shard-00-00-re4xl.mongodb.net:27017,e2eproj-shard-00-01-re4xl.mongodb.net:27017,e2eproj-shard-00-02-re4xl.mongodb.net:27017/test?ssl=true&replicaSet=E2eproj-shard-0&authSource=admin&retryWrites=true";
-
 console.log("\nAttempting db connection\n");
 
 var options = {
