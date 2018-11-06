@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
     User.find({},
         (err, users) => {
         if(err) return res.status(500).send("Could not locate user specified");
+        console.log(users);
         res.status(200).send(users);
     });
 });
