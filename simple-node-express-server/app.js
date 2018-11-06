@@ -3,17 +3,17 @@ var app = express();
 var db = require('./db');
 var AuthController = require('./Authorization/AuthController');
 var ChatController = require('./Chat/ChatController');
-
-
 var UserController = require('./user/UserController');
 
-var port = process.env.PORT || 3000;
 
+var port = 3000;
 
-var server = app.listen(port, function(){
-    console.log("Server started on port 3000");
+app.get('/', function(req, res){
+    res.send("Super Secure Bro");
     app.use('/registration', AuthController);
     app.use('/message', ChatController);
+    console.log("Server running");
 });
 
-module.exports = app;
+app.listen(port);
+
