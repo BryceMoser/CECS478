@@ -15,4 +15,9 @@ app.get('/', function(req, res){
     console.log("Server running");
 });
 
+<<<<<<< HEAD
 app.listen(port);
+=======
+app.listen(port);
+
+>>>>>>> 989757e3e3048ffaab12429fb73f69534e864cb2
