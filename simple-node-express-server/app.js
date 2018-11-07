@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var db = require('./db');
+var reload = require('reload');
 var AuthController = require('./Authorization/AuthController');
 var ChatController = require('./Chat/ChatController');
 var UserController = require('./user/UserController');
@@ -17,3 +18,4 @@ app.get('/', function(req, res){
 
 app.listen(port);
 
+reload(app);
