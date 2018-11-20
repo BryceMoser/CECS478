@@ -1,0 +1,22 @@
+Today: Fix following issues
+ChatContoller:
+Post "/":
+-Make sure user who is sending it, there email is included inside the message
+
+Get "/"
+- When accessing messages for an email, must provide password associated with that email
+- Also return who the sender was
+
+E2EChat General fixes:
+-[Critical] We need to fix the refresh problem
+	1. Look into what is causing this
+	2. Look into alternative for whatever the problem is (Database connection issues, forever package running)
+	3. Apply the alternatives
+- All data is being sent to the test collection, connect to the E2eChat collection
+
+Today additional task:
+- Research ways to implement our program
+
+
+Tomorrow: 
+- Get started on implementing the E2e Scriptd
