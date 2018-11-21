@@ -16,7 +16,7 @@ router.post('/', VerifyToken, function(req, res, next) {
         message: req.body.message
     },
     function(err){
-        if(!err) res.status(500).send("Error sending the message");
+        if(err) res.status(500).send("Error sending the message");
     });
     res.status(200).send({message: req.body.message});
 });
@@ -31,5 +31,8 @@ router.get('/', VerifyToken, function(req, res) {
     });
     
 });
+
+console.log("ChatController Ready");
+
 
 module.exports = router;

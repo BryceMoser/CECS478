@@ -9,11 +9,13 @@ var UserController = require('./user/UserController');
 var port = 3000;
 
 app.get('/', function(req, res){
+    console.log("Made it here");
     res.send("Super Secure Bro");
     app.use('/registration', AuthController);
     app.use('/message', ChatController);
     console.log("Server running");
 });
 
-app.listen(port);
-
+app.listen(port, () => {
+    console.log("Listening at port: " + port);
+});

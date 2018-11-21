@@ -28,4 +28,7 @@ router.get('/', (req, res) => {
     });
 });
 
+console.log("UserController Ready");
+
+
 module.exports = router;
