@@ -17,6 +17,6 @@ E2EChat General fixes:
 Today additional task:
 - Research ways to implement our program
 
-
-Tomorrow: 
+Until 6pm to finish these tasks!
+Tomorrow meeting at 6pm: 
 - Get started on implementing the E2e Scriptd
