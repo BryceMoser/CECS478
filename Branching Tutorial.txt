@@ -1,0 +1,15 @@
+Branching process:
+git pull origin master //Pull any updates, and ensure you are on the master branch
+git checkout -b branchName //Creates a local branch to work on your work
+git push origin HEAD(or branchName) //Create the branch in the global repository
+//Do your work for the feature
+//Push all work to origin HEAD(or branchName)
+//Once work is done follow the following steps
+//Perform final push
+git checkout master
+git merge branchName //branchName is the name of the branch you were working on. This creates an optional pull request
+//Go to github and and create the pull request
+//Check for the green checkmark, "Ready to merge"
+//If any merge conflicts we can go through together
+//After all merge conflicts are resolved, accept PR
+git branch -d branchName
