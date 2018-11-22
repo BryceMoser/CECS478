@@ -5,6 +5,7 @@ router.use(bodyParser.urlencoded({extended : true}));
 router.use(bodyParser.json());
 var Chat = require('./Chat.js');
 var VerifyToken = require('../Authorization/VerifyToken');
+var User = require('../user/User');
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
@@ -12,7 +13,7 @@ var config = require('../config');
 
 router.post('/', VerifyToken, function(req, res, next) {
     Chat.create({
-        email: req.body.email,
+        reciever: req.body.reciever,
         message: req.body.message
     },
     function(err){
@@ -22,14 +23,21 @@ router.post('/', VerifyToken, function(req, res, next) {
 });
 
 router.get('/', VerifyToken, function(req, res) {
-    Chat.find({email: req.headers['email']},
+    let password = req.headers['password'];
+    let reciever = req.headers['reciever'];
+
+    User.findOne({email: reciever}, (err, user) => {
+        if(!user) return res.status(404).send('Invaid User.');
+        var passwordIsValid = bcrypt.compareSync(password, user.password);
+        if(!passwordIsValid) return res.status(404).send('Invaid password.');
+        
+        Chat.find({reciever: reciever},
         (err, messages) => {
-        if(err) return res.status(500).send("Could not locate any messages");
-        console.log(messages);
-        res.status(200).send(messages);
-        Chat.find({email: req.headers['email']}).remove().exec();
-    });
-    
+            if(!messages) return res.status(500).send("Could not locate any messages");
+            res.status(200).send(messages);
+            Chat.find({email: reciever}).remove().exec();
+        });
+    });    
 });
 
 console.log("ChatController Ready");
