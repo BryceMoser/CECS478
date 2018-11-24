@@ -52,7 +52,7 @@ router.get('/me', VerifyToken, function(req, res, next) {
         expiresIn: 86400 // expires in 24 hours
       });
       Token.create({email : req.body.email, token: token});
-      
+
       res.status(200).send({ auth: true, token: token });
     });
   });
@@ -61,7 +61,5 @@ router.get('/me', VerifyToken, function(req, res, next) {
   router.get('/logout', function(req, res) {
     res.status(200).send({ auth: false, token: null });
   });
-
-  console.log("AuthController Ready");
 
 module.exports = router;

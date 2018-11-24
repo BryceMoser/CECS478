@@ -10,37 +10,51 @@ var User = require('../user/User');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
+let Token = require('../Authorization/Token');
 
 router.post('/', VerifyToken, function(req, res, next) {
-    Chat.create({
-        reciever: req.body.reciever,
-        message: req.body.message
-    },
-    function(err){
-        if(err) res.status(500).send("Error sending the message");
+
+    Token.findOne({token: req.headers['x-access-token']}, (err, user) => {
+        if(!req.body.message) res.status(400).send("No message input detected");
+        if(!req.body.reciever) res.status(400).send("No reciever input detected");
+
+        let sender = user.email;
+
+        Chat.create({
+            reciever: req.body.reciever,
+            sender: sender,
+            message: req.body.message
+        },
+        function(err){
+            if(err) res.status(500).send("Error sending the message");
+        });
+        res.status(200).send(sender + ": " + req.body.message);
     });
-    res.status(200).send({message: req.body.message});
 });
 
 router.get('/', VerifyToken, function(req, res) {
-    let password = req.headers['password'];
-    let reciever = req.headers['reciever'];
 
-    User.findOne({email: reciever}, (err, user) => {
-        if(!user) return res.status(404).send('Invaid User.');
-        var passwordIsValid = bcrypt.compareSync(password, user.password);
-        if(!passwordIsValid) return res.status(404).send('Invaid password.');
+    Token.findOne({token: req.headers['x-access-token']}, (err , user) => {
+        if(err) res.status(500).send("Internal server error");
+
+        let reciever = user.email;
         
-        Chat.find({reciever: reciever},
-        (err, messages) => {
-            if(!messages) return res.status(500).send("Could not locate any messages");
-            res.status(200).send(messages);
-            Chat.find({email: reciever}).remove().exec();
+        Chat.find({reciever: reciever}, (err, messages) => {
+            if(err) res.status(500).send("Internal server error");
+
+            let temp = "";
+            for(let i = 0; i < messages.length; i++)
+            {
+                temp += (messages[i].sender + ": " + messages[i].message + "\n");
+            }
+
+            if(temp == "")
+                temp = "No new messages";
+            res.status(200).send(temp);
         });
-    });    
+        Chat.find({reciever: reciever}).remove().exec();
+        
+    });   
 });
-
-console.log("ChatController Ready");
-
 
 module.exports = router;

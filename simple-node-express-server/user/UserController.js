@@ -8,7 +8,6 @@ router.use(bodyParser.json());
 var User = require('./User');
 
 router.post('/', function (req, res) {
-    console.log('req body: ', req.body);
     User.create({
         email: req.body.email,
         password: req.body.password
@@ -23,12 +22,9 @@ router.get('/', (req, res) => {
     User.find({},
         (err, users) => {
         if(err) return res.status(500).send("Could not locate user specified");
-        console.log(users);
         res.status(200).send(users);
     });
 });
-
-console.log("UserController Ready");
 
 
 module.exports = router;
