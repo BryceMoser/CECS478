@@ -9,6 +9,7 @@ var VerifyToken = require('./VerifyToken');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
+let Token = require('./Token');
 
 router.post('/', function(req, res){
     var hashPass = bcrypt.hashSync(req.body.password, 8);
@@ -24,7 +25,7 @@ router.post('/', function(req, res){
         var token = jwt.sign({id: user._id}, config.secret, {
             expiresIn: 86400
         });
-
+        Token.create({email : req.body.email, token: token});
         res.status(200).send({auth: true, token: token});
     });
 });
@@ -43,11 +44,15 @@ router.get('/me', VerifyToken, function(req, res, next) {
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) return res.status(500).send('Error on the server.');
       if (!user) return res.status(404).send('No user found.');
+
       var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
       if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
       var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
       });
+      Token.create({email : req.body.email, token: token});
+
       res.status(200).send({ auth: true, token: token });
     });
   });
@@ -56,7 +61,5 @@ router.get('/me', VerifyToken, function(req, res, next) {
   router.get('/logout', function(req, res) {
     res.status(200).send({ auth: false, token: null });
   });
-
-  console.log("AuthController Ready");
 
 module.exports = router;
