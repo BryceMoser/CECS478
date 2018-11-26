@@ -9,7 +9,7 @@ var options = {
     reconnectTries: Number.MAX_VALUE
 };
 
-mongoose.connect(url, options).then(
+mongoose.connect(url, {dbName: 'E2eChat'}).then(
     function res() {
         console.log('Successfully connected!');
     }, function err() {

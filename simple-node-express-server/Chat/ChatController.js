@@ -12,6 +12,7 @@ var bcrypt = require('bcryptjs');
 var config = require('../config');
 let Token = require('../Authorization/Token');
 
+
 router.post('/', VerifyToken, function(req, res, next) {
 
     Token.findOne({token: req.headers['x-access-token']}, (err, user) => {
