@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var UserSchema = new mongoose.Schema({
     email: String,
     password: String
-}, {collection: 'E2eChat'});
+});
 
-mongoose.model('User', UserSchema, 'E2eChat');
+mongoose.model('User', UserSchema, 'Users');
 
 module.exports = mongoose.model('User');
