@@ -1,4 +1,3 @@
-import enc
 import sys
 import os 
 import base64
@@ -10,9 +9,8 @@ from cryptography.hazmat.primitives.asymmetric import utils
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
-#Gathering encryption data from JSON
- # AES(MSG) -> Key, IV Ciphertext, tag -> RSA.E(Key, publicKey) -> RSA.D(Key, privateKey)
 
+RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath') + 1]
 def Mydecrypt(ciphertext, tag, iv, key):
   #Decrypts the ciphertext using the tag, iv and key
   decryptor = Cipher(
@@ -45,6 +43,6 @@ def RSACipher_Decrypt (cipherTxt, tag, IV, rsaCipher, RSAPrvKeyPath):
 
 
 
-RSAPrvKeyPath = sys.argv[sys.argv.index('--rsaprivkey') + 1]
+
 
 
