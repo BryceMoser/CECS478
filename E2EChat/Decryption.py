@@ -39,6 +39,7 @@ def RSACipher_Decrypt (cipherTxt, tag, IV, rsaCipher, RSAPrvKeyPath):
       )
     
     plaintext = Mydecrypt(cipherTxt, tag, IV, AESKey)
+    plaintext = plaintext.decode('ascii')
     print(plaintext)
 
 

@@ -27,7 +27,7 @@ def Myencrypt(plaintext):
  
 def RSAEnc(plaintext, RSA_PublicKey_filepath):
 
-    ciphertext, tag, iv, key = Myencrypt(msg)
+    iv, ciphertext, tag, key = Myencrypt(msg)
 
     with open(RSA_PublicKey_filepath, 'rb') as key_file:
         public_key = serialization.load_pem_public_key(
@@ -47,19 +47,20 @@ def RSAEnc(plaintext, RSA_PublicKey_filepath):
         )
     )
 
-    ciphertext_base64 = base64.b64encode(ciphertext).decode('utf-8')
-    tag = base64.b64encode(tag).decode('utf-8')
-    iv = base64.b64encode(iv).decode('utf-8')
-    RSACipher = base64.b64encode(RSACipher).decode('utf-8')
+    # ciphertext = base64.b64encode(ciphertext).decode('utf-8')
+    # tag = base64.b64encode(tag).decode('utf-8')
+    # iv = base64.b64encode(iv).decode('utf-8')
+    # RSACipher = base64.b64encode(RSACipher).decode('utf-8')
  
 
-    return (ciphertext_base64, tag, iv, RSACipher)
+    return (ciphertext, tag, iv, RSACipher)
 
 
-if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath':
+if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath' in sys.argv:
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
     RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
-    msg = [sys.argv.index('--e') + 1]
+    msg = sys.argv[sys.argv.index('--e') + 1]
+    msg = msg.encode('utf-8')
     ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
     RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
     
