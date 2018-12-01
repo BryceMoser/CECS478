@@ -1,4 +1,4 @@
-import Decryption
+from Decryption import RSACipher_Decrypt
 import os
 import sys
 import base64
@@ -59,7 +59,7 @@ def RSAEnc(plaintext, RSA_PublicKey_filepath):
 if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath':
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
     RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
-    msg = sys.argv[sys.argv.index('--e') + 1]
+    msg = [sys.argv.index('--e') + 1]
     ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
-    Decryption.RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
+    RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
     
