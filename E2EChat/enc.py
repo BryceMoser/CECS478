@@ -56,7 +56,7 @@ def RSAEnc(plaintext, RSA_PublicKey_filepath):
     return (ciphertext_base64, tag, iv, RSACipher)
 
 
-if '--e' in sys.argv and '--rsakeypath' in sys.argv and 'prvkeypath':
+if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath':
     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
     RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
     msg = sys.argv[sys.argv.index('--e') + 1]
