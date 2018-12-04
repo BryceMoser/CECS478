@@ -43,8 +43,8 @@ def Registration():
     email = input("\nPlease enter a new email\n")
     password = input("Please enter a new password\n")
     payload = {'email': email, 'password': password}
+    r = requests.post(url='http://localhost:3000/registration', data=payload)
     if(r.status_code == 200):
-        r = requests.post(url='http://localhost:3000/registration', data=payload)
         json_data = r.json()
 
         if(json_data['auth'] == False):
