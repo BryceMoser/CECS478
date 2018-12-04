@@ -25,7 +25,7 @@ def Myencrypt(plaintext):
     return (iv, ciphertext, encryptor.tag, key)
 
  
-def RSAEnc(plaintext, RSA_PublicKey_filepath):
+def RSAEnc(msg, RSA_PublicKey_filepath):
 
     iv, ciphertext, tag, key = Myencrypt(msg)
 
@@ -47,20 +47,20 @@ def RSAEnc(plaintext, RSA_PublicKey_filepath):
         )
     )
 
-    # ciphertext = base64.b64encode(ciphertext).decode('utf-8')
-    # tag = base64.b64encode(tag).decode('utf-8')
-    # iv = base64.b64encode(iv).decode('utf-8')
-    # RSACipher = base64.b64encode(RSACipher).decode('utf-8')
+    ciphertext = base64.b64encode(ciphertext).decode('utf-8')
+    tag = base64.b64encode(tag).decode('utf-8')
+    iv = base64.b64encode(iv).decode('utf-8')
+    RSACipher = base64.b64encode(RSACipher).decode('utf-8')
  
 
     return (ciphertext, tag, iv, RSACipher)
 
 
-if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath' in sys.argv:
-    RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
-    RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
-    msg = sys.argv[sys.argv.index('--e') + 1]
-    msg = msg.encode('utf-8')
-    ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
-    RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
+# if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath' in sys.argv:
+#     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
+#     RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
+#     msg = sys.argv[sys.argv.index('--e') + 1]
+#     msg = msg.encode('utf-8')
+#     ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
+#     RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
     

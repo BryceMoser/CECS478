@@ -24,7 +24,10 @@ router.post('/', VerifyToken, function(req, res, next) {
         Chat.create({
             reciever: req.body.reciever,
             sender: sender,
-            message: req.body.message
+            message: req.body.message,
+            tag: req.body.tag,
+            iv: req.body.iv,
+            RSACipher: req.body.RSACipher
         },
         function(err){
             if(err) res.status(500).send("Error sending the message");
@@ -43,15 +46,15 @@ router.get('/', VerifyToken, function(req, res) {
         Chat.find({reciever: reciever}, (err, messages) => {
             if(err) res.status(500).send("Internal server error");
 
-            let temp = "";
-            for(let i = 0; i < messages.length; i++)
-            {
-                temp += (messages[i].sender + ": " + messages[i].message + "\n");
-            }
+            // let temp = "";
+            // for(let i = 0; i < messages.length; i++)
+            // {
+            //     temp += (messages[i].sender + ": " + messages[i].message + "\n");
+            // }
 
-            if(temp == "")
-                temp = "No new messages";
-            res.status(200).send(temp);
+            // if(temp == "")
+            //     temp = "No new messages";
+            res.status(200).send(messages);
         });
         Chat.find({reciever: reciever}).remove().exec();
         

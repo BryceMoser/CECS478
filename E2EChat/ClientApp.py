@@ -2,9 +2,10 @@ import os
 import sys
 import requests
 import json
+from enc import RSAEnc
+from Decryption import RSACipher_Decrypt
 
 
-main()
 
 def main():
     print("Starting Chat Application\n")
@@ -26,28 +27,34 @@ def Login():
     payload = {'email': email, 'password': password}
     r = requests.post(url = "http://localhost:3000/registration/login", data = payload)
     #r = requests.post("https://supersecurebros.me/registration/login", data = {'email': userName, 'password': password})
-    json_data = r.json()
-    if(json_data['auth'] == False):
-        print('Invalid credentials')
-        main()
-    token = json_data['token']
-    messaging(token)
+    if(r.status_code == 200):
+        json_data = r.json()
+        if(json_data['auth'] == False):
+            print('Invalid credentials')
+            return
+        token = json_data['token']
+        messaging(token)
+    else:
+        return
     
 
 
 def Registration():
     email = input("\nPlease enter a new email\n")
     password = input("Please enter a new password\n")
-
     payload = {'email': email, 'password': password}
-    r = requests.post(url='http://localhost:3000/registration', data=payload)
-    json_data = r.json()
+    if(r.status_code == 200):
+        r = requests.post(url='http://localhost:3000/registration', data=payload)
+        json_data = r.json()
 
-    if(json_data['auth'] == False):
+        if(json_data['auth'] == False):
+            print('Invalid credentials')
+            return
+        token = json_data['token']
+        messaging(token)
+    else:
         print('Invalid credentials')
-        main()
-    token = json_data['token']
-    messaging(token)
+        return
 
 
 def messaging(token):
@@ -57,16 +64,30 @@ def messaging(token):
             reciever = input("Please enter the email of the person you wish to message\n")
             message = input("Please enter the message to " + reciever + "\n")
 
-            payload = {'reciever': reciever, 'message': message}
+            msg = message.encode('utf-8')
+            msg, tag, iv, RSACipher = RSAEnc(msg, ".\\RSA2048KeyPair\\rsaPubKey.pem")
+
+            payload = {'reciever': reciever, 'message': msg, 'tag': tag, 'iv': iv, 'RSACipher': RSACipher}
             headers = {'x-access-token': token}
             r = requests.post(url='http://localhost:3000/message', data=payload, headers = headers)
-            print(r.text)
+            
         elif(userInput == "2"):
             print("Retrieving your messages:\n")
             headers = {'x-access-token': token}
             r = requests.get(url='http://localhost:3000/message', headers = headers)
-            print(r.text)
+            json_data = r.json()
+            for i in json_data:
+                sender = i['sender']
+                ciphertext = i['message']
+                iv = i['iv']
+                tag = i['tag']
+                RSACipher = i['RSACipher']
+
+                message = RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, ".\\RSA2048KeyPair\\rsaPrivKey.pem")
+                print("\n" + sender + ": " + message)
+
         else:
             print("Logging you off")
             break
-    main()
+
+main()
