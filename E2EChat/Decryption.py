@@ -10,7 +10,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 
-#RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath') + 1]
+
 def Mydecrypt(ciphertext, tag, iv, key):
   #Decrypts the ciphertext using the tag, iv and key
   decryptor = Cipher(
@@ -35,8 +35,6 @@ def RSACipher_Decrypt (cipherTxt, tag, IV, rsaCipher, RSAPrvKeyPath):
     privKeyFile.close()
 
     #Determining AES from RSACipher
-
-    #rsaCipher = base64.b64decode(rsaCipher)
     AESKey = privKey.decrypt(
         rsaCipher,
         padding.OAEP(

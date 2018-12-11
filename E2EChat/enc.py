@@ -53,14 +53,4 @@ def RSAEnc(msg, RSA_PublicKey_filepath):
     RSACipher = base64.b64encode(RSACipher).decode('utf-8')
  
 
-    return (ciphertext, tag, iv, RSACipher)
-
-
-# if '--e' in sys.argv and '--rsakeypath' in sys.argv and '--prvkeypath' in sys.argv:
-#     RSAPubKeyPath = sys.argv[sys.argv.index('--rsakeypath') + 1]
-#     RSAPrvKeyPath = sys.argv[sys.argv.index('--prvkeypath')+1]
-#     msg = sys.argv[sys.argv.index('--e') + 1]
-#     msg = msg.encode('utf-8')
-#     ciphertext, tag, iv, RSACipher = RSAEnc(msg, RSAPubKeyPath)
-#     RSACipher_Decrypt(ciphertext, tag, iv, RSACipher, RSAPrvKeyPath)
-    
+    return (ciphertext, tag, iv, RSACipher)    

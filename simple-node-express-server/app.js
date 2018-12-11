@@ -5,7 +5,6 @@ var AuthController = require('./Authorization/AuthController');
 var ChatController = require('./Chat/ChatController');
 var UserController = require('./user/UserController');
 
-
 var port = 3000;
 
 app.get('/', function(req, res){
