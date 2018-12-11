@@ -25,8 +25,8 @@ def Login():
     email = input("\nPlease enter your email\n")
     password = input("Please enter your password\n")
     payload = {'email': email, 'password': password}
-    r = requests.post(url = "http://localhost:3000/registration/login", data = payload)
-    #r = requests.post("https://supersecurebros.me/registration/login", data = {'email': userName, 'password': password})
+    r = requests.post(url = "https://supersecurebro.me/registration/login", data = payload)
+    #r = requests.post("https://supersecurebros.me/registration/login", data = payload)
     if(r.status_code == 200):
         json_data = r.json()
         if(json_data['auth'] == False):
@@ -43,7 +43,7 @@ def Registration():
     email = input("\nPlease enter a new email\n")
     password = input("Please enter a new password\n")
     payload = {'email': email, 'password': password}
-    r = requests.post(url='http://localhost:3000/registration', data=payload)
+    r = requests.post(url='https://supersecurebro.me/registration', data=payload)
     if(r.status_code == 200):
         json_data = r.json()
 
@@ -69,12 +69,12 @@ def messaging(token):
 
             payload = {'reciever': reciever, 'message': msg, 'tag': tag, 'iv': iv, 'RSACipher': RSACipher}
             headers = {'x-access-token': token}
-            r = requests.post(url='http://localhost:3000/message', data=payload, headers = headers)
+            r = requests.post(url='https://supersecurebro.me/message', data=payload, headers = headers)
             
         elif(userInput == "2"):
             print("Retrieving your messages:\n")
             headers = {'x-access-token': token}
-            r = requests.get(url='http://localhost:3000/message', headers = headers)
+            r = requests.get(url='https://supersecurebro.me/message', headers = headers)
             json_data = r.json()
             for i in json_data:
                 sender = i['sender']
